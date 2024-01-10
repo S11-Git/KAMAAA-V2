@@ -27,33 +27,34 @@ public class MainActivity extends AppCompatActivity {
         Button Ticklebutton = findViewById(R.id.TickleButton);
         TextView Hungertext = findViewById(R.id.HungerText);
         TextView Thirsttext = findViewById(R.id.ThirstText);
-        TextView Healthtext = findViewById(R.id.HealthText);
         TextView Moodtext = findViewById(R.id.MoodText);
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) ImageView Charimg = findViewById(R.id.CharImg);
 
          AtomicInteger Hunger = new AtomicInteger(100);
          AtomicInteger Thirst = new AtomicInteger(100);
-         int Health = 100;
+         AtomicInteger Health = new AtomicInteger(100);
          AtomicInteger Mood = new AtomicInteger(100);
 
         Hungertext.setText("Hunger: " + Hunger);
         Thirsttext.setText("Thirst: " + Thirst);
-        Healthtext.setText("Health: " + Health);
         Moodtext.setText("Mood: " + Mood);
 
         Foodbutton.setOnClickListener(v -> {
             Hunger.addAndGet(10);
             Hungertext.setText("Hunger: " + Hunger);
+
         });
 
         Drinkbutton.setOnClickListener(v -> {
             Thirst.addAndGet(10);
             Thirsttext.setText("Thirst: " + Thirst);
+
         });
 
         Ticklebutton.setOnClickListener(v -> {
             Mood.addAndGet(10);
             Moodtext.setText("Mood: " + Mood);
+
         });
 
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -68,6 +69,26 @@ public class MainActivity extends AppCompatActivity {
             });
         }, 0, 1000, TimeUnit.MILLISECONDS);
 
+        ScheduledExecutorService scheduler2 = Executors.newSingleThreadScheduledExecutor();
+        scheduler2.scheduleAtFixedRate(() -> {
+            runOnUiThread(() -> {
+                if (Hunger.get() > 100) {
+                    Hunger.set(100);
+                }
+
+                if (Thirst.get() > 100) {
+                    Thirst.set(100);
+                }
+
+                if (Mood.get() > 100) {
+                    Mood.set(100);
+                }
+
+                Hungertext.setText("Hunger: " + Hunger);
+                Thirsttext.setText("Thirst: " + Thirst);
+                Moodtext.setText("Mood: " + Mood);
+            });
+        }, 0, 5, TimeUnit.MILLISECONDS);
 
     }
 }
