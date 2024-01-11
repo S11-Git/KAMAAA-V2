@@ -69,39 +69,17 @@ public class MainActivity extends AppCompatActivity {
             HungerSave();
             ThirstSave();
             MoodSave();
-        }), 0, 1000, TimeUnit.MILLISECONDS);
+        }), 0, 1, TimeUnit.SECONDS);
 
         ScheduledExecutorService scheduler2 = Executors.newSingleThreadScheduledExecutor();
         scheduler2.scheduleAtFixedRate(() -> runOnUiThread(() -> {
-            if (Hunger > 100) {
-                Hunger = 100;
-            }
-
-            if (Thirst > 100) {
-                Thirst = 100;
-            }
-
-            if (Mood > 100) {
-                Mood = 100;
-            }
-
-            if (Hunger < 0) {
-                DeathCount();
-            }
-
-            if (Thirst < 0) {
-                DeathCount();
-            }
-
-            if (Mood < 0) {
-                DeathCount();
-            }
-
-            Hungertext.setText("Hunger: " + Hunger);
-            Thirsttext.setText("Thirst: " + Thirst);
-            Moodtext.setText("Mood: " + Mood);
-            DeathCountText.setText("Death Count: " + DeathCounter);
+            DeathCheck();
+            DrawCharacter();
+            Prevent101();
+            DrawText();
         }), 0, 5, TimeUnit.MILLISECONDS);
+
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -135,6 +113,51 @@ public class MainActivity extends AppCompatActivity {
 
     public void DeathSave() {
         PrefConfig4.saveTotalInPref(this, DeathCounter);
+    }
+
+    public void DrawCharacter() {
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) ImageView Charimg = findViewById(R.id.CharImg);
+        if(Mood == 0) {
+            Charimg.setImageResource(R.drawable.dead);
+        }
+        if (Mood > 0 && Mood < 25) {
+            Charimg.setImageResource(R.drawable.sad);
+        }
+        if (Mood > 25 && Mood < 50) {
+            Charimg.setImageResource(R.drawable.neutral);
+        }
+        if (Mood > 50) {
+            Charimg.setImageResource(R.drawable.happy);
+        }
+    }
+
+    public void DeathCheck() {
+        if (Hunger == 0 || Thirst == 0 || Mood == 0) {
+            DeathCount();
+        }
+    }
+
+    public void Prevent101() {
+        if (Hunger > 100) {
+            Hunger = 100;
+        }
+        if (Thirst > 100) {
+            Thirst = 100;
+        }
+        if (Mood > 100) {
+            Mood = 100;
+        }
+    }
+
+    public void DrawText() {
+        TextView Hungertext = findViewById(R.id.HungerText);
+        TextView Thirsttext = findViewById(R.id.ThirstText);
+        TextView Moodtext = findViewById(R.id.MoodText);
+        TextView DeathCountText = findViewById(R.id.DeathCountText);
+        Hungertext.setText("Hunger: " + Hunger);
+        Thirsttext.setText("Thirst: " + Thirst);
+        Moodtext.setText("Mood: " + Mood);
+        DeathCountText.setText("Death Count: " + DeathCounter);
     }
 
 }
