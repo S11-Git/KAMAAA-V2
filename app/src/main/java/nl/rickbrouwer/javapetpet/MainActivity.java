@@ -12,13 +12,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AtomicInteger Hunger;
-    private AtomicInteger Thirst;
-    private AtomicInteger Mood;
+    private int Hunger;
+    private int Thirst;
+    private int Mood;
+    private int DeathCounter;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -32,81 +32,109 @@ public class MainActivity extends AppCompatActivity {
         TextView Hungertext = findViewById(R.id.HungerText);
         TextView Thirsttext = findViewById(R.id.ThirstText);
         TextView Moodtext = findViewById(R.id.MoodText);
-
+        TextView DeathCountText = findViewById(R.id.DeathCountText);
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) ImageView Charimg = findViewById(R.id.CharImg);
 
-        Hunger = new AtomicInteger(100);
-        Thirst = new AtomicInteger(100);
-        Mood = new AtomicInteger(100);
+
+        Hunger = PrefConfig.loadTotalFromPref(this);
+        Thirst = PrefConfig2.loadTotalFromPref(this);
+        Mood = PrefConfig3.loadTotalFromPref(this);
+        DeathCounter = PrefConfig4.loadTotalFromPref(this);
 
         Hungertext.setText("Hunger: " + Hunger);
         Thirsttext.setText("Thirst: " + Thirst);
         Moodtext.setText("Mood: " + Mood);
 
+
         Foodbutton.setOnClickListener(v -> {
-            Hunger.addAndGet(10);
+            Hunger = Hunger + 10;
+            HungerSave();
         });
 
         Drinkbutton.setOnClickListener(v -> {
-            Thirst.addAndGet(10);
+            Thirst = Thirst + 10;
+            ThirstSave();
         });
 
         Ticklebutton.setOnClickListener(v -> {
-            Mood.addAndGet(10);
+            Mood = Mood + 10;
+            MoodSave();
         });
 
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(() -> runOnUiThread(() -> {
-            Hunger.addAndGet(-1);
-            Thirst.addAndGet(-1);
-            Mood.addAndGet(-1);
+            Hunger = Hunger - 1;
+            Thirst = Thirst - 1;
+            Mood = Mood - 1;
+            HungerSave();
+            ThirstSave();
+            MoodSave();
         }), 0, 1000, TimeUnit.MILLISECONDS);
 
         ScheduledExecutorService scheduler2 = Executors.newSingleThreadScheduledExecutor();
         scheduler2.scheduleAtFixedRate(() -> runOnUiThread(() -> {
-            if (Hunger.get() > 100) {
-                Hunger.set(100);
+            if (Hunger > 100) {
+                Hunger = 100;
             }
 
-            if (Thirst.get() > 100) {
-                Thirst.set(100);
+            if (Thirst > 100) {
+                Thirst = 100;
             }
 
-            if (Mood.get() > 100) {
-                Mood.set(100);
+            if (Mood > 100) {
+                Mood = 100;
             }
 
-            if (Hunger.get() < 0) {
+            if (Hunger < 0) {
                 DeathCount();
             }
 
-            if (Thirst.get() < 0) {
+            if (Thirst < 0) {
                 DeathCount();
             }
 
-            if (Mood.get() < 0) {
+            if (Mood < 0) {
                 DeathCount();
             }
 
             Hungertext.setText("Hunger: " + Hunger);
             Thirsttext.setText("Thirst: " + Thirst);
             Moodtext.setText("Mood: " + Mood);
+            DeathCountText.setText("Death Count: " + DeathCounter);
         }), 0, 5, TimeUnit.MILLISECONDS);
     }
 
     @SuppressLint("SetTextI18n")
     public void DeathCount() {
-        TextView DeathCountText = findViewById(R.id.DeathCountText);
-        int DeathCounter = 0;
-        DeathCounter++;
-        DeathCountText.setText("Death Count: " + DeathCounter);
+        DeathCounter += 1;
+        DeathSave();
         Death();
     }
 
     public void Death() {
         Toast.makeText(this, "He fucking dead...", Toast.LENGTH_LONG).show();
-        Hunger.set(100);
-        Thirst.set(100);
-        Mood.set(100);
+        Hunger = 100;
+        Thirst = 100;
+        Mood = 100;
+        HungerSave();
+        ThirstSave();
+        MoodSave();
     }
+
+    public void HungerSave() {
+        PrefConfig.saveTotalInPref(this, Hunger);
+    }
+
+    public void ThirstSave() {
+        PrefConfig2.saveTotalInPref(this, Thirst);
+    }
+
+    public void MoodSave() {
+        PrefConfig3.saveTotalInPref(this, Mood);
+    }
+
+    public void DeathSave() {
+        PrefConfig4.saveTotalInPref(this, DeathCounter);
+    }
+
 }
