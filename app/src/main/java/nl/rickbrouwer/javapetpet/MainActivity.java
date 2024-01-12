@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         Foodbutton.setOnClickListener(v -> {
-            if (Coins < 15) {
+            if (Coins < 10) {
                 Toast.makeText(this, "Not enough coins", Toast.LENGTH_SHORT).show();
                 return;
             } else {
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Drinkbutton.setOnClickListener(v -> {
-            if (Coins < 20) {
+            if (Coins < 10) {
                 Toast.makeText(this, "Not enough coins", Toast.LENGTH_SHORT).show();
                 return;
             } else {
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
             Charimg.setImageResource(R.drawable.dead);
         } else if (Mood < 25) {
             Charimg.setImageResource(R.drawable.sad);
-        } else if (Mood < 50) {
+        } else if (Mood < 75) {
             Charimg.setImageResource(R.drawable.neutral);
         } else {
             Charimg.setImageResource(R.drawable.happy);
@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
     public void CoinsBOM() {
         if (Mood < 25) {
             Coins += 2; // Adjusted from 1
-        } else if (Mood < 50) {
+        } else if (Mood < 75) {
             Coins += 4; // Adjusted from 3
         } else {
             Coins += 5; // Adjusted from 4
