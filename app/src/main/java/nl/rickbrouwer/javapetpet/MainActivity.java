@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private int Thirst;
     private int Mood;
     private int DeathCounter;
+    private int Coins;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         Thirst = PrefConfig2.loadTotalFromPref(this);
         Mood = PrefConfig3.loadTotalFromPref(this);
         DeathCounter = PrefConfig4.loadTotalFromPref(this);
+        Coins = PrefConfig5.loadTotalFromPref(this);
 
         Hungertext.setText("Hunger: " + Hunger);
         Thirsttext.setText("Thirst: " + Thirst);
@@ -46,25 +48,47 @@ public class MainActivity extends AppCompatActivity {
 
 
         Foodbutton.setOnClickListener(v -> {
-            Hunger = Hunger + 10;
-            HungerSave();
+            if (Coins < 15) {
+                Toast.makeText(this, "Not enough coins", Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                Hunger += 10;
+                Coins -= 15;
+                HungerSave();
+                CoinsSave();
+            }
         });
 
         Drinkbutton.setOnClickListener(v -> {
-            Thirst = Thirst + 10;
-            ThirstSave();
+            if (Coins < 20) {
+                Toast.makeText(this, "Not enough coins", Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                Thirst += 10;
+                Coins -= 20;
+                ThirstSave();
+                CoinsSave();
+            }
         });
 
         Ticklebutton.setOnClickListener(v -> {
-            Mood = Mood + 10;
-            MoodSave();
+            if (Coins < 25) {
+                Toast.makeText(this, "Not enough coins", Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                Mood += 10;
+                Coins -= 25;
+                MoodSave();
+                CoinsSave();
+            }
         });
 
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(() -> runOnUiThread(() -> {
-            Hunger = Hunger - 2;
-            Thirst = Thirst - 2;
-            Mood = Mood - 1;
+            Hunger -= 2;
+            Thirst -= 2;
+            Mood -= 1;
+            CoinsBOM();
             HungerSave();
             ThirstSave();
             MoodSave();
@@ -77,9 +101,8 @@ public class MainActivity extends AppCompatActivity {
             Prevent101();
             DrawText();
         }), 0, 5, TimeUnit.MILLISECONDS);
-
-
     }
+
 
     @SuppressLint("SetTextI18n")
     public void DeathCount() {
@@ -93,9 +116,11 @@ public class MainActivity extends AppCompatActivity {
         Hunger = 100;
         Thirst = 100;
         Mood = 100;
+        Coins = 0;
         HungerSave();
         ThirstSave();
         MoodSave();
+        CoinsSave();
     }
 
     public void HungerSave() {
@@ -112,6 +137,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void DeathSave() {
         PrefConfig4.saveTotalInPref(this, DeathCounter);
+    }
+
+    public void CoinsSave() {
+        PrefConfig5.saveTotalInPref(this, Coins);
     }
 
     public void DrawCharacter() {
@@ -144,10 +173,23 @@ public class MainActivity extends AppCompatActivity {
         TextView Thirsttext = findViewById(R.id.ThirstText);
         TextView Moodtext = findViewById(R.id.MoodText);
         TextView DeathCountText = findViewById(R.id.DeathCountText);
+        TextView CoinText = findViewById(R.id.CoinText2);
         Hungertext.setText("Hunger: " + Hunger);
         Thirsttext.setText("Thirst: " + Thirst);
         Moodtext.setText("Mood: " + Mood);
         DeathCountText.setText("Death Count: " + DeathCounter);
+        CoinText.setText("Coins: " + Coins);
+    }
+
+    public void CoinsBOM() {
+        if (Mood < 25) {
+            Coins += 2; // Adjusted from 1
+        } else if (Mood < 50) {
+            Coins += 4; // Adjusted from 3
+        } else {
+            Coins += 5; // Adjusted from 4
+        }
+        CoinsSave();
     }
 
 }
