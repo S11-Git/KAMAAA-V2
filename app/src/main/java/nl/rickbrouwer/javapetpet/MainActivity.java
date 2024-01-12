@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
         TextView DeathCountText = findViewById(R.id.DeathCountText);
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) ImageView Charimg = findViewById(R.id.CharImg);
 
-
         Hunger = PrefConfig.loadTotalFromPref(this);
         Thirst = PrefConfig2.loadTotalFromPref(this);
         Mood = PrefConfig3.loadTotalFromPref(this);
@@ -63,13 +62,13 @@ public class MainActivity extends AppCompatActivity {
 
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(() -> runOnUiThread(() -> {
-            Hunger = Hunger - 1;
-            Thirst = Thirst - 1;
+            Hunger = Hunger - 2;
+            Thirst = Thirst - 2;
             Mood = Mood - 1;
             HungerSave();
             ThirstSave();
             MoodSave();
-        }), 0, 1, TimeUnit.SECONDS);
+        }), 0, 2, TimeUnit.SECONDS);
 
         ScheduledExecutorService scheduler2 = Executors.newSingleThreadScheduledExecutor();
         scheduler2.scheduleAtFixedRate(() -> runOnUiThread(() -> {
@@ -116,37 +115,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void DrawCharacter() {
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) ImageView Charimg = findViewById(R.id.CharImg);
+        ImageView Charimg = findViewById(R.id.CharImg);
         if(Mood == 0) {
             Charimg.setImageResource(R.drawable.dead);
-        }
-        if (Mood > 0 && Mood < 25) {
+        } else if (Mood < 25) {
             Charimg.setImageResource(R.drawable.sad);
-        }
-        if (Mood > 25 && Mood < 50) {
+        } else if (Mood < 50) {
             Charimg.setImageResource(R.drawable.neutral);
-        }
-        if (Mood > 50) {
+        } else {
             Charimg.setImageResource(R.drawable.happy);
         }
     }
 
     public void DeathCheck() {
-        if (Hunger == 0 || Thirst == 0 || Mood == 0) {
+        if (Hunger < 1 || Thirst < 1 || Mood < 1) {
             DeathCount();
         }
     }
 
     public void Prevent101() {
-        if (Hunger > 100) {
-            Hunger = 100;
-        }
-        if (Thirst > 100) {
-            Thirst = 100;
-        }
-        if (Mood > 100) {
-            Mood = 100;
-        }
+        Hunger = Math.min(Hunger, 100);
+        Thirst = Math.min(Thirst, 100);
+        Mood = Math.min(Mood, 100);
     }
 
     public void DrawText() {
