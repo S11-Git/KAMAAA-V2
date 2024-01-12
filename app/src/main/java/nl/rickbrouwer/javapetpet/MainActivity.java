@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             } else {
                 Hunger += 10;
-                Coins -= 15;
+                Coins -= 10;
                 HungerSave();
                 CoinsSave();
             }
@@ -65,22 +65,15 @@ public class MainActivity extends AppCompatActivity {
                 return;
             } else {
                 Thirst += 10;
-                Coins -= 20;
+                Coins -= 10;
                 ThirstSave();
                 CoinsSave();
             }
         });
 
         Ticklebutton.setOnClickListener(v -> {
-            if (Coins < 25) {
-                Toast.makeText(this, "Not enough coins", Toast.LENGTH_SHORT).show();
-                return;
-            } else {
                 Mood += 10;
-                Coins -= 25;
                 MoodSave();
-                CoinsSave();
-            }
         });
 
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -157,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void DeathCheck() {
-        if (Hunger < 1 || Thirst < 1 || Mood < 1) {
+        if (Hunger < 1 || Thirst < 1) {
             DeathCount();
         }
     }
