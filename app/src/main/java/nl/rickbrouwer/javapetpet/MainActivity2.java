@@ -16,8 +16,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity {
-
+public class MainActivity2 extends AppCompatActivity {
     private int Hunger;
     private int Thirst;
     private int Mood;
@@ -28,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main2);
 
         Button Foodbutton = findViewById(R.id.FoodButton);
         Button Drinkbutton = findViewById(R.id.DrinkButton);
@@ -39,20 +38,19 @@ public class MainActivity extends AppCompatActivity {
         TextView DeathCountText = findViewById(R.id.DeathCountText);
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) ImageView Charimg = findViewById(R.id.CharImg);
 
-        Button gotoma2 = findViewById(R.id.GoToMA2);
+        Button gotoma1 = findViewById(R.id.GoToMA1);
 
 
 
-        Hunger = PrefConfig.loadTotalFromPref(this);
-        Thirst = PrefConfig2.loadTotalFromPref(this);
-        Mood = PrefConfig3.loadTotalFromPref(this);
-        DeathCounter = PrefConfig4.loadTotalFromPref(this);
-        Coins = PrefConfig5.loadTotalFromPref(this);
+        Hunger = Pet2PrefConfig.loadTotalFromPref(this);
+        Thirst = Pet2PrefConfig2.loadTotalFromPref(this);
+        Mood = Pet2PrefConfig3.loadTotalFromPref(this);
+        DeathCounter = Pet2PrefConfig4.loadTotalFromPref(this);
+        Coins = Pet2PrefConfig5.loadTotalFromPref(this);
 
         Hungertext.setText("Hunger: " + Hunger);
         Thirsttext.setText("Thirst: " + Thirst);
         Moodtext.setText("Mood: " + Mood);
-
 
         Foodbutton.setOnClickListener(v -> {
             if (Coins < 10) {
@@ -79,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Ticklebutton.setOnClickListener(v -> {
-                Mood += 10;
-                MoodSave();
+            Mood += 10;
+            MoodSave();
         });
 
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -92,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             HungerSave();
             ThirstSave();
             MoodSave();
-            Log.d("MainActivity", "Running the KAMAAA");
+            Log.d("MainActivity2", "Running the NANALAN");
         }), 0, 2, TimeUnit.SECONDS);
 
         ScheduledExecutorService scheduler2 = Executors.newSingleThreadScheduledExecutor();
@@ -103,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
             DrawText();
         }), 0, 5, TimeUnit.MILLISECONDS);
 
-        gotoma2.setOnClickListener(v -> {
+        gotoma1.setOnClickListener(v -> {
             // Stop the schedulers before switching to MainActivity2
             if (scheduler != null && !scheduler.isShutdown()) {
                 scheduler.shutdown();
@@ -113,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // Create an Intent to start MainActivity2
-            Intent intent = new Intent(v.getContext(), MainActivity2.class);
+            Intent intent = new Intent(v.getContext(), MainActivity.class);
 
             // Start the new activity
             v.getContext().startActivity(intent);
@@ -122,10 +120,9 @@ public class MainActivity extends AppCompatActivity {
             if (v.getContext() instanceof Activity) {
                 ((Activity) v.getContext()).finish();
             } else {
-                Log.d("MainActivity", "Not an instance of Activity");
+                Log.d("MainActivity2", "Not an instance of Activity");
             }
         });
-
 
     }
 
@@ -150,35 +147,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void HungerSave() {
-        PrefConfig.saveTotalInPref(this, Hunger);
+        Pet2PrefConfig.saveTotalInPref(this, Hunger);
     }
 
     public void ThirstSave() {
-        PrefConfig2.saveTotalInPref(this, Thirst);
+        Pet2PrefConfig2.saveTotalInPref(this, Thirst);
     }
 
     public void MoodSave() {
-        PrefConfig3.saveTotalInPref(this, Mood);
+        Pet2PrefConfig3.saveTotalInPref(this, Mood);
     }
 
     public void DeathSave() {
-        PrefConfig4.saveTotalInPref(this, DeathCounter);
+        Pet2PrefConfig4.saveTotalInPref(this, DeathCounter);
     }
 
     public void CoinsSave() {
-        PrefConfig5.saveTotalInPref(this, Coins);
+        Pet2PrefConfig5.saveTotalInPref(this, Coins);
     }
 
     public void DrawCharacter() {
         ImageView Charimg = findViewById(R.id.CharImg);
         if(Mood == 0) {
-            Charimg.setImageResource(R.drawable.dead);
+            Charimg.setImageResource(R.drawable.dead2);
         } else if (Mood < 25) {
-            Charimg.setImageResource(R.drawable.sad);
+            Charimg.setImageResource(R.drawable.sad2);
         } else if (Mood < 75) {
-            Charimg.setImageResource(R.drawable.neutral);
+            Charimg.setImageResource(R.drawable.neutral2);
         } else {
-            Charimg.setImageResource(R.drawable.happy);
+            Charimg.setImageResource(R.drawable.happy2);
         }
     }
 
@@ -217,5 +214,4 @@ public class MainActivity extends AppCompatActivity {
         }
         CoinsSave();
     }
-
 }
